@@ -11,7 +11,7 @@
 
 1. 원시 타입 (primitive type)
 ``` 
-boolean, number, string, null, undefined, bigint symbol
+boolean, number, string, null, undefined, bigint, symbol
 ```
 
 - **falsy한 값** :  false(Boolean), 0 (Number), NaN (Number), '' (String), null (null), undefined(undefined) 
