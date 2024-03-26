@@ -46,8 +46,7 @@ MVC 패턴에서 Controller는 Model의 데이터를 조회하거나 업데이�
 Model이 업데이트 되면, View는 화면에 반영합니다. View가 Model을 업데이트 할 수도 있습니다. Model이 업데이트 되어 View가 따라서 업데이트 되고, 업데이트 된 View가 다시 다른 Model을 업데이트 한다면, 또 다른 View가 업데이트 될 수 있습니다.
 
 하지만 밑에 그림을 보시면 알 수 있듯 모델과 뷰가 늘어날수록 복잡해져 이를 추적하거나 이해하기가 어려운 상황이 되었습니다.
-
-<img width="428" alt="image" src="https://github.com/Deep-Dive-React/react-study-archive/assets/42230162/aaf4f88c-2bc1-47e9-b845-332a8942ea9f">
+![image](https://github.com/Deep-Dive-React/react-study-archive/assets/42230162/78f1fbaa-12af-402b-b109-2714af05a0ac)
 
 페이스북에서 이야기하는 MVC의 양방향 데이터 흐름이 만들어 낸 예측하기 어려운 버그 중 하나는 알림 버그라고 합니다.  
 페이스북에 로그인 했을 때, 화면 위 메시지 아이콘에 알림이 떠 있지만, 그 메시지 아이콘을 클릭하면 아무런 메시지가 없는 버그를 보신 적이 있으실 겁니다.
@@ -55,8 +54,9 @@ Model이 업데이트 되면, View는 화면에 반영합니다. View가 Model�
 ![image](https://github.com/Deep-Dive-React/react-study-archive/assets/42230162/e6f753dd-2d1a-44b4-b1d3-0fdcd955896c)
 
 이러한 문제를 해결하기 위해 페이스북에서는 단방향 솔루션인 Flux를 개발하게 됐다고 합니다.
-  
-<img width="509" alt="image" src="https://github.com/Deep-Dive-React/react-study-archive/assets/42230162/be15e142-d82a-4fbc-8e67-c6e3f1a9e46e">
+
+![image](https://github.com/Deep-Dive-React/react-study-archive/assets/42230162/1abce564-b92c-43d8-acc5-c6319e888a90)
+
 
 데이터가 항상 단방향 데이터으로 전달되어 데이터 변화를 휠씬 예측하기 쉽게 했다고 합니다.   
 
@@ -183,8 +183,7 @@ Redux는 flux구조를 구현하기 위해 등장했다고 합니다.
 
 또한 elm 아키텍쳐를 도입해서 구현을 했다고 하는데 elm에 대해 알아보죠
 elm은 React와 같은 웹 사이트나 웹 어플리케이션을 만드는 데 사용하는 툴과 경쟁하고 있다고도 하네요  
-![image](https://github.com/Deep-Dive-React/react-study-archive/assets/42230162/f882f25e-cf46-44e9-91c5-971772f629bc){: width="50%"}
-
+![image](https://github.com/Deep-Dive-React/react-study-archive/assets/42230162/852ed7c9-9eb7-43c7-946a-109f220fcf2c)
 
 Elm은 단방향 데이터 흐름을 기반으로하는 아키텍처를 제공하며, 강력한 타입 시스템과 장애 회복 기능을 포함하고 있어 안정적이고 확장 가능한 웹 애플리케이션을 쉽게 개발할 수 있습니다.
 
@@ -198,8 +197,42 @@ Elm 애플리케이션은 모델(Model), 뷰(View), 업데이트 함수(Update) 
 
 업데이트는 모델을 수정하는 방식을 말합니다. 위에서 flux 패턴의 store와 상태를 관리하고 업데이트한다는 점이 비슷합니다.  
 
-이러한 편의성을 바탕으로 리액트의 표준으로 자리잡았다고 합니다.
+이러한 편의성을 바탕으로 리액트의 표준으로 자리잡았다고 합니다.  
+
+하지만 위의 코드에서 봤듯 이걸 구현하기란 너무 해야할일이 많아서 다양한 상태관리들도 나왔다고 합니다.  
 
 ## ContextAPi와 useContext (3/5)
+
+일반적으로 부모에서 자식으로 넘겨주는것은 props를 사용합니다. 하지만 만약 자식의 자식 즉 손자, 손자의 손자 이런식으로 맨 밑에 전달하고자 할때는 코드가 너무 길어지는 문제가 발생하게 됩니다.
+
+![image](https://github.com/Deep-Dive-React/react-study-archive/assets/42230162/bc38e727-e22e-4093-9245-62cb1bc56fbb)
+
+이럴 때 나온것이 바로 context api라고 합니다. 
+Context 란?
+Context는 리액트 컴포넌트간에 어떠한 값을 공유할수 있게 해주는 기능입니다. 주로 Context는 전역적(global)으로 필요한 값을 다룰 때 사용하는데요, 꼭 전역적일 필요는 없습니다. Context를 단순히 "리액트 컴포넌트에서 Props가 아닌 또 다른 방식으로 컴포넌트간에 값을 전달하는 방법이다" 라고 접근을 하시는 것이 좋습니다.
+
+Context 는 리액트 패키지에서 createContext 라는 함수를 불러와서 만들 수 있습니다.
+~~~
+import { createContext } from 'react';
+const MyContext = createContext();
+Context 객체 안에는 Provider라는 컴포넌트가 들어있습니다. 그리고, 그 컴포넌트간에 공유하고자 하는 값을 value 라는 Props로 설정하면 자식 컴포넌트들에서 해당 값에 바로 접근을 할 수 있습니다.
+
+function App() {
+  return (
+    <MyContext.Provider value="Hello World">
+      <GrandParent />
+    </MyContext.Provider>
+  );
+}
+~~~
+context api는 상태관리가 아닌 주입을 도와주는 기능이며 렌더링을 막아주는 기능이 존재하지 않으니 사용시 주의가 필요합니다 :)
+
 ## 훅의 탄생과 react query, swr (4/5)
+context api가 생긴지 1년도 채 되지 않아 훅API가 추가 되었습니다.  
+특징으로는 state를 쉽게 재사용 가능하다고 합니다.
+이러한 훅과 state의 발전을 통해 React query와 SWR이라는 상태관리 라이브러리가 등장합니다.  
+두 라이브러리 모두 http 통신에 특화된 라이브러리라고 합니다.
+
 ## recoil, zustand, jotai, valito에 이르기까지 (5/5)
+
+다양한 라이브러리들이 범용적이게 사용할 수 있도록 등장했습니다.
