@@ -164,6 +164,7 @@ const MemorizedComponent = useMemo(()=><ExpensiveComponent value={value}>, [valu
 
 두 개는 동일하다. (함수 또한 값으로 표현될 수 있으므로)
 but 함수 메모이제이션 용도로는 `useCallback` 사용 ㄱㄱ
+
 ```js
 useCallback(() => {
   console.log("hello");
@@ -178,11 +179,9 @@ useMemo(() => {
 
 ## 3.1.5 useRef
 
-### `useState`와의 공통점 
+### `useState`와의 공통점
 
- 컴포넌트 내부에서 렌더링이 일어나도 변경 가능한 상태값을 저장한다.
-
-
+컴포넌트 내부에서 렌더링이 일어나도 변경 가능한 상태값을 저장한다.
 
 ### `useRef`의 고유한 기능
 
@@ -190,25 +189,48 @@ useMemo(() => {
 
 2. `useRef`는 그 값이 변하더라도 `렌더링을 발생시키지 않는다`.
 
-
 ### 함수 외부 변수 선언과의 차이점
 
 - 외부 변수 사용의 경우, 컴포넌트 실행 전에 value값이 `메모리 상에 불필요하게 존재` 한다.
 
 - 컴포넌트가 여러 번 생성되었을 때, 각 컴포넌트에서 가리키는 값이 value로 동일함.
 
--> useRef는 `컴포넌트가 렌더링 될때만` 생성되고, 컴포넌트 인스턴스가 여러개여도 각각 `별개의 값` 을 바라본다. 
+-> useRef는 `컴포넌트가 렌더링 될때만` 생성되고, 컴포넌트 인스턴스가 여러개여도 각각 `별개의 값` 을 바라본다.
 
 ### 언제 유용하나요?
 
-렌더링을 발생시키지 않고 원하는 상태값을 저장하고 싶을 때
+**렌더링을 발생시키지 않고 원하는 상태값을 저장하고 싶을 때** 사용하자!!!
 
-이전의 상태를 밴환하는 usePrevious 훅
+1. 이전의 상태를 반환하는 usePrevious 훅을 구현
+
+```js
+function usePrevious(value) {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  }, [value]);
+  return ref.current;
+}
 
 
+function SomeComponent (){
+  const [counter ,setCounter] = useState(0);
+  const previousCounter = usePrevious (counter);
+  const handleClickButton = ()=>{
+    setCounter ((prev)=>prev+1);
+  }
+  return (
+    <button onClick={handleClickButton}>
+    </button>
+  )
+}
+
+```
+
+위에 usePrevious 훅을 이해해봅시다. 
+<img src="./usePrevious.png" />
+
+사실사 이거 이해하면 useRef 랑 useEffect 이해끝 ㅇㅇㅇㅇ
 
 
-
-
-
-
+## 3.1.6
