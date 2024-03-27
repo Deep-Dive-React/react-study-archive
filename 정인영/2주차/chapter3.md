@@ -212,25 +212,117 @@ function usePrevious(value) {
   return ref.current;
 }
 
-
-function SomeComponent (){
-  const [counter ,setCounter] = useState(0);
-  const previousCounter = usePrevious (counter);
-  const handleClickButton = ()=>{
-    setCounter ((prev)=>prev+1);
-  }
-  return (
-    <button onClick={handleClickButton}>
-    </button>
-  )
+function SomeComponent() {
+  const [counter, setCounter] = useState(0);
+  const previousCounter = usePrevious(counter);
+  const handleClickButton = () => {
+    setCounter((prev) => prev + 1);
+  };
+  return <button onClick={handleClickButton}></button>;
 }
-
 ```
 
-위에 usePrevious 훅을 이해해봅시다. 
+위에 usePrevious 훅을 이해해봅시다.
 <img src="./usePrevious.png" />
 
 사실사 이거 이해하면 useRef 랑 useEffect 이해끝 ㅇㅇㅇㅇ
 
+## 3.1.6 useContext
 
-## 3.1.6
+### 등장 배경
+
+`props drilling` 문제를 극복하기 위해 `context` 라는 개념으로, props 전달 없이 하위 컴포넌트에서 원하는 값을 사용할 수 있다.
+
+즉 함수 컴포넌트에서 `context`를 사용할 수 있게 해주는 훅 - `useContext` 이다
+
+### 사용 방법
+
+1. `createContext()` 를 통해 하위 컴포넌트로 전달할 Context를 생성한다. (TS사용할 경우 여기서 타입을 미리지정해둔다)
+2. `<Context.Provider value={{}}/>` 로 값을 하위 컴포넌트로 전달한다.
+3. 그 후 하위 컴포넌트에서 `useContext` 를 사용하면 상위 컴포넌트 에서 제공한 값을 사용할 수 있음.
+
+### 주의사항
+
+- 여러 개의 Provider가 있을 시엔 가장 가까운 Provider 값을 반환.
+
+- `useMyContext` 를 통해 콘텍스트가 한 번이라도 초기화되어 값을 내려주는지 확인해보자. (다수의 Provider와 useContext를 사용할 때, 특히 타입스크립트를 사용하고 있다면..)
+
+- `useContext`를 사용하는 컴포넌트는 최대한 작게 하고, 재사용되지 않을 만한 컴포넌트에서 사용해야 함
+
+- Context는 상태를 주입해주는 API이다. 상태 관리 라이브러리가 아니다.
+
+## 3.1.7 useReducer
+
+### 한 줄 요약
+
+useReducer는 리액트의 내장 Hook 중 하나로,
+reducer를 사용하여 컴포넌트의 상태 로직을 관리하는 데 사용된다.
+주로 useState보다 복잡한 상태 로직을 관리할 때 사용된다.
+
+useReducer의 묘미는, ⭐️한 컴포넌트 내에서 State를 업데이트하는 로직 부분을
+그 컴포넌트로부터 분리시키는 것을 가능⭐️하게 해준다는 것이다
+
+### 사용법
+
+```js
+function reducer(state, action) {
+ // ...
+}
+const [state, dispatch] = useReducer(reducer, initialArg, init?)
+
+```
+
+**Parameter**
+
+`reducer`: 인자로 상태와 액션을 받으며, 다음 상태값을 반환하는 함수
+`initialArg`: 초기값.
+`init`: 초기값을 반환하는 초기화 함수. 초기화 함수가 전달되지 않은 경우,초기 값은 initialArg 값으로 설정된다. 그렇지 않은 경우,초기값은 `init(initialArg)`를 호출하여 결정됨.
+
+**반환값**
+
+1. 현재 상태 : 첫 번째 렌더 중 init(initialArg) 또는 initialArg로 설정된다.
+
+2. dispatch 함수 : 상태를 다른 값으로 업데이트하고 재렌더를 발생시키는 디스패치 함수
+
+```js
+import { useState, useEffect, useReducer } from "react/cjs/react.development";
+function reducer(state, action) {
+  switch (action.type) {
+    case "increment":
+      return state + 1;
+    case "decrement":
+      return state - 1;
+    default:
+      return state;
+  }
+}
+export default function ChildComponent() {
+  const [state, dispatch] = useReducer(reducer, 0);
+  return (
+    <>
+      <p>Count: {state}</p>
+      <button
+        onClick={() => {
+          dispatch({ type: "increment" });
+        }}
+      >
+        +
+      </button>
+      <button
+        onClick={() => {
+          dispatch({ type: "decrement" });
+        }}
+      >
+        -
+      </button>
+    </>
+  );
+}
+```
+
+<img src="./설명.png"/>
+
+### 왜 필요함?
+
+- `state`를 업데이트하는 로직을 재사용할 수 있다!
+- 객체, 배열 등 복잡한 상태 관리를 할 떄
