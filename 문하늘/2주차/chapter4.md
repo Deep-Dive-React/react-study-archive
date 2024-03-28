@@ -74,7 +74,7 @@ renderToNodeStream과 결과물은 동일하나, 리액트 자바스크립트에
 
 ### 4.2.5 hydrate
 renderToString과 renderToNodeStream으로 생성된 HTML 콘텐츠에 자바스크립트 핸들러나 이벤트를 붙이는 역할을 한다. 
-```
+```java
 import * as ReactDOM from 'react-dom'
 import App from './App'
 

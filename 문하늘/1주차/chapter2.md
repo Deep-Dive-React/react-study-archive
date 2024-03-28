@@ -8,7 +8,7 @@ JSX를 구성하는 가장 기본 요소
     ▪ JSXClosingElement:JSXOpeningElement가 종료됐음을 알리는 요소
     ▪ JSXSelfClosingElement:요소가 시작되고 스스로 종료되는 형태
     ▪ JSXFragment:아무런 요소가 없는 형태 
-➀ JSXElementName
+JSXElementName
 JSXElement의 요소 이름으로 쓸 수 있는 것
     ▪ JSXIdentifier:JSX 내부에서 사용할 수 있는 식별자
     ▪ JSXNamespaceName:JSXIdentifier:JSXIdentifier의 조합
@@ -32,7 +32,7 @@ JSXElement의 자식 값
     ▪ \는 주의해서 사용
 
 ### 2.1.2 JSX 예제
-```
+```java
 const ComponentA = <A>안녕하세요.</A>
 const ComponentB = <A />
 const ComponentC = <A {...{required: true}} />
@@ -98,8 +98,8 @@ JSX 문법에는 있지만 실제로 리액트에서 사용하지 않는 것
     ▪ 이전에 했던 작업을 다시 재사용하거나 필요하지 않은 경우 폐기할 수 있음
     이 모든 과정이 비동기로 일어남, 즉 동시에 일어나지 않음
 ##### 파이버 구현 방식
-➀ 렌더단계 : 사용자에게 노출되지 않는 모든 비동기 작업을 수행한다. 우선순위를 지정하거나 중지시키는 등의 작업이 일어난다.
-➁ 커밋단계 : DOM에 실제 변경 사항을 반영하기 위한 작업, commitWork()가 실행된다. 이 과정은 앞서와 다르게 동기식으로 일어나고 중단될 수도 없다.
+1. 렌더단계 : 사용자에게 노출되지 않는 모든 비동기 작업을 수행한다. 우선순위를 지정하거나 중지시키는 등의 작업이 일어난다.
+2. 커밋단계 : DOM에 실제 변경 사항을 반영하기 위한 작업, commitWork()가 실행된다. 이 과정은 앞서와 다르게 동기식으로 일어나고 중단될 수도 없다.
 리액트 요소는 렌더링이 발생할 때마다 새롭게 생성되지만 파이버는 컴포넌트가 최초로 마운트되는 시점에 생성되어 이후에는 가급적이면 재사용된다.
 
 ##### 파이버 구현체에서 선언된 주요 속성
@@ -242,7 +242,7 @@ props와 state가 변경되면, 다시 한 번 그 값을 기준으로 함수가
     ▪ 함수 컴포넌트의 useState()의 두 번째 배열 요소인 setter가 실행되는 경우
     ▪ 함수 컴포넌트의 useReducer()의 두 번째 배열 요소인 dispatch가 실행되는 경우
     ▪ 컴포넌트의 key props가 변경되는 경우
-```
+```java
 const arr = [1, 2, 3]
 export default function App() {
     return (

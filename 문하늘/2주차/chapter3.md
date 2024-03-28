@@ -5,7 +5,7 @@ useState 함수는 함수 컴포넌트 내부에서 상태를 정의하고 상�
 
 ##### useState 구현 살펴보기
 [useState 훅의 기본 사용법]
-```
+```java
 import {useState} from 'react'
 const [state, setState] = useState(initialState)
 ```
@@ -23,7 +23,7 @@ useState 내부에 함수를 넣으면 최초 렌더링 이후에는 실행되�
 애플리케이션 내 컴포넌트의 여러 값들을 활용해 동기적으로 부수 효과를 내는 메커니즘
 state와 props의 변화 속에서 일어나는 렌더링과정에서 실행되는 부수 효과 함수
 부수 효과가 어떤 상태값과 함께 실행되는지 살펴보는 것이 중요하다.
-```
+```java
 function Component() {
     // ..
     useEffect(() => {
@@ -65,7 +65,7 @@ useEffect 밖에서 함수를 선언하면 불필요한 코드가 많아지고 �
 첫 번째 인수로는 어떠한 값을 반환하는 생성 함수를, 두 번째 인수로는 해당 함수가 의존하는 값의 배열을 전달한다.
 메모이제이션은 값뿐만 아니라 컴포넌트도 가능하다(그러나 이 때는 React.memo를 쓰는 것이 더 현명하다).
 메모이제이션을 활용하면 무거운 연산을 다시 수행하는 것을 막을 수 있다.
-```
+```java
 import {useMemo} from 'react'
 const memoizedValue = useMemo(() => expensiveComputation(a, b), [a, b])
 ```
@@ -83,7 +83,7 @@ useRef의 최초 기본값은 return 문에 정의해 둔 DOM이 아니고 useRe
     [useRef와 useState의 차이점]
     ▪ useRef는 반환값인 객체 내부에 있는 current로 값에 접근 또는 변경할 수 있다.
     ▪ useRef는 그 값이 변하더라도 렌더링을 발생시키지 않는다.
-```
+```java
 function RefComponent() {
         const count = useRef(0)
         function handleClick() {
@@ -142,7 +142,7 @@ DOM은 계산됐지만 이것이 화면에 반영되기 전에 하고 싶은 작
 
 ### 3.1.10 useDebugValue
 디버깅하고 싶은 정보를 이 훅에다 사용하면 리액트 개발자 도구에서 볼 수 있다.
-```
+```java
 function useDate() {
     const date = new Date()
     useDebugValue(date, (date) => `현재 시간: ${date.toISOString()}`)
@@ -174,14 +174,14 @@ React.memo는 렌더링하기에 앞서 props를 비교해 이전과 props가 �
 useMemo를 해도 동일하게 메모이제이션 할 수 있으나, 코드를 작성하는 입장에서 혼선을 빚을 수 있으므로 memo를 사용하는 편이 좋다.
 ##### 고차함수 만들어보기
     고차함수 : 함수를 인수로 받거나 결과를 변환하는 함수
-```
+```java
 //고차함수인 Array.prototype.map 사용 예제
 const list = [1, 2, 3]
 const doubledList = list.map((item) => item*2)
 ```
 (item) => item * 2 --> 함수를 인수로 받음
 
-```
+```java
 function add(a) {
     return function(b) {
         return a+b
@@ -196,7 +196,7 @@ const result2 = result(2) // 3 반환
 이처럼 고차 함수를 활용하면 함수를 인수로 받거나 새로운 함수를 반환해 새로운 결과를 만들어 낼 수 있다.
 
 ##### 고차 함수를 활용한 리액트 고차 컴포넌트 만들어보기
-```
+```java
 interface LoginProps {
     loginRequired?: boolean
 }
@@ -243,7 +243,7 @@ loginRequired가 없거나 false이면 <h3>text</h3>가 출력된다.
 #### 사용자 정의 훅이 필요한 경우
 useEffect, useState와 같이 리액트에서 제공하는 훅으로만 공통 로직을 분리할 수 있는 경우
 사용자 정의 훅 그자체로는 렌더링에 영향을 미치지 않기 때문에 개발자가 원하는 방향으로 훅을 사용할 수 있다.
-```
+```java
 function HookComponent() {
     const {loggedIn} = useLogin()
     useEffect(() => {
@@ -261,7 +261,7 @@ function HookComponent() {
 (예시)
 1. 로그인되지 않은 어떤 사용자가 컴포넌트에 접근하려 할 때 애플리케이션 관점에서 컴포넌트를 감추고 로그인을 요구하는 공통 컴포넌트를 노출하려는 경우
 2. 특정 에러가 발생했을 때 현재 컴포넌트 대신 에러가 발생했음을 알릴 수 있는 컴포넌트를 노출하는 경우
-```
+```java
 function HookComponent() {
     const {loggedIn} = useLogin()
 
