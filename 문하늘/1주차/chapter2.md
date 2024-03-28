@@ -3,7 +3,7 @@
 ### 2.1.1 JSX의 정의
 1. JSXElement
 JSX를 구성하는 가장 기본 요소
-    [JSXElement가 되기 위한 방법]
+    JSXElement가 되기 위한 방법 
     ▪ JSXOpeningElement:일반적으로 볼 수 있는 요소
     ▪ JSXClosingElement:JSXOpeningElement가 종료됐음을 알리는 요소
     ▪ JSXSelfClosingElement:요소가 시작되고 스스로 종료되는 형태
@@ -18,14 +18,14 @@ JSXElement의 요소 이름으로 쓸 수 있는 것
 JSXElement에 부여할 수 있는 속성. 존재하지 않아도 에러나지 않음
     ▪ JSXSpreadAttributes:자바스크립트의 전개 연산자와 동일한 역할
     ▪ JSXAttribute:속성을 나타내는 키와 값으로 짝을 이루어 표현
-    ▻ JSXAttributeName:속성의 키값. JSXIdentifier, JSXNamespacedName 가능
-    ▻ JSXAttributeValue:속성의 키에 할당할 수 있는 값
+    JSXAttributeName:속성의 키값. JSXIdentifier, JSXNamespacedName 가능
+    JSXAttributeValue:속성의 키에 할당할 수 있는 값
 
 3. JSXChildren
 JSXElement의 자식 값    
     ▪ JSXChild:JSXChildren을 이루는 기본 단위
 4. JSXString
-    [JSXString에서 사용 가능한 문자열]
+    JSXString에서 사용 가능한 문자열
     ▪ "큰따옴표로 구성된 문자열"
     ▪ '작은 따옴표로 구성된 문자열'
     ▪ JSXText
@@ -111,8 +111,8 @@ JSX 문법에는 있지만 실제로 리액트에서 사용하지 않는 것
 중요한 것은 리액트가 파이버를 처리할 때마다 이러한 작업을 직접 바로 처리하기도 하고 스케줄링하기도 한다는 것이다.
 
 2. 리액트 파이버 트리
-➀ 현재 모습을 담은 파이버 트리
-➁ 작업 중인 상태를 나타내는 workInProgress 트리
+현재 모습을 담은 파이버 트리
+작업 중인 상태를 나타내는 workInProgress 트리
 #### 더블 버퍼링
 리액트 파이버 작업이 끝나면 포인터만 변경하여 workInPregress트리를 현재 트리로 바꾸는 기술
 현재 UI 렌더링을 위해 존재하는 트리인 current를 기준으로 모든 작업이 시작된다.
@@ -122,10 +122,10 @@ workInProgress 트리가 반영이 완료되면 current가 workInProgress로 변
 
 ### 2.2.4 파이버와 가상 DOM
 파이버의 작업 순서
-➀ 리액트는 beginWork() 함수를 실행해 파이버 작업을 수행하는데, 더 이상 자식이 없는 파이버를 만날 때까지 트리 형식으로 시작된다.
-➁ 1번에서 작업이 끝나면 그다음 completeWork() 함수를 실행해 파이버 작업을 완료한다.
-➂ 형제가 있다면 형제로 넘어간다.
-➃ 2번, 3번이 모두 끝났다면 return으로 돌아가 자신의 작업이 완료됐음을 알린다.
+1. 리액트는 beginWork() 함수를 실행해 파이버 작업을 수행하는데, 더 이상 자식이 없는 파이버를 만날 때까지 트리 형식으로 시작된다.
+2. 1번에서 작업이 끝나면 그다음 completeWork() 함수를 실행해 파이버 작업을 완료한다.
+3. 형제가 있다면 형제로 넘어간다.
+4. 2번, 3번이 모두 끝났다면 return으로 돌아가 자신의 작업이 완료됐음을 알린다.
 
 ### 2.2.5 정리
     가상 DOM과 리액트의 핵심은 값으로 UI를 표현하는 것이다.
