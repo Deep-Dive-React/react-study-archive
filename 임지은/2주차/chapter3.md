@@ -225,3 +225,37 @@ export default function App() {
 ## 7. useReducer
 - useState와 비슷 (클로저를 활용해 값을 가둬서 state를 관리한다.)
 - state 값을 변경하는 시나리오를 **제한적**으로 두고 이에 대한 변경을 빠르게 확인할 수 있게끔 한다. 
+
+```javascript
+const [state, dispatch] = useReducer(reducer, initialState, init);
+```
+**반환**
+- state : 컴포넌트에서 사용할 state(상태)
+- dispatch : reducer 함수를 실행시키며, 컴포넌트 내에서 state의 업데이트를 일으키기 위해서 사용하는 함수
+```javascript
+dispatcher({type: 'up'})
+```
+
+
+**parameter**
+- reducer : 컴포넌트 외부에서 state를 업데이트하는 로직을 담당하는 함수. 현재의 state와 action 객체를 인자로 받아서, 기존의 state를 대체할 새로운 state를 반환하는 함수
+```javascript
+type Action = { type: 'up' | 'down' | 'reset'; payload?: State}
+
+function reducer(state: State, action: Action) : State {
+    switch (action.type) {
+        case 'up':
+            return {count: state.count + 1} 
+        case 'down':
+            return {count: state.count - 1 > 0 ? state.count-1:0}
+        case 'reset':
+            return (action.payload || {count: 0})
+        default:
+            throw new Error(`Unexpected action type ${action.type}`)
+    }
+}
+```
+위와 같이 state를 변경해주는 action을 'up', 'down', 'reset'으로 제한한다.
+
+- initialState : 초기 state
+- init : 초기함수
