@@ -160,9 +160,123 @@ function useDate() {
 리액트에서 재사용할 수 있는 로직을 관리할 수 있는 방법으로 사용자 정의 훅과 고차 컴포넌트가 있다.
 
 ### 3.2.1 사용자 정의 훅
-서로 다른 컴포넌트 내부에서 같은 로직을 고유하고자 할 때 주로 사용되는 것
+내부에 useState와 useEffect 등을 가지고 자신만의 원하는 훅을 만드는 기법법
 고차 컴포넌트와 달리 사용자 정의 훅은 리액트에서만 사용할 수 있다.
 사용자 정의 훅의 규칙 중 하나는 이름이 반드리 use로 시작하는 함수를 만들어야 한다는 것이다.
 
+### 3.2.2 고차 컴포넌트
+컴포넌트 자체의 로직을 재사용하기 위한 방법
+고차함수의 일종으로 리액트가 아니더라도 자바스크립트 환경에서 널리 쓰일 수 있다.
+리액트에서 가장 유명한 고차 컴포넌트는 React.memo다.
 
+##### React.memo란?
+React.memo는 렌더링하기에 앞서 props를 비교해 이전과 props가 같다면 렌더링 자체를 생략하고 이전에 기억해 둔 컴포넌트를 반환하여 불필요한 렌더링작업을 생략할 수 있다.
+useMemo를 해도 동일하게 메모이제이션 할 수 있으나, 코드를 작성하는 입장에서 혼선을 빚을 수 있으므로 memo를 사용하는 편이 좋다.
+##### 고차함수 만들어보기
+    고차함수 : 함수를 인수로 받거나 결과를 변환하는 함수
+```
+//고차함수인 Array.prototype.map 사용 예제
+const list = [1, 2, 3]
+const doubledList = list.map((item) => item*2)
+```
+(item) => item * 2 --> 함수를 인수로 받음
 
+```
+function add(a) {
+    return function(b) {
+        return a+b
+    }
+}
+const result = add(1) 
+const result2 = result(2) // 3 반환
+```
+1. result에는 add(1)을 호출했을 때 반환되는 함수가 할당됨
+>> 여기서 할당된 함수는 현재 a에 1이 할당되어 b를 받아 a+b를 반환하는 함수
+2. result2는 add(1)을 호출하여 반환된 함수를 다시 호출하여 얻은 결과값이다. 
+이처럼 고차 함수를 활용하면 함수를 인수로 받거나 새로운 함수를 반환해 새로운 결과를 만들어 낼 수 있다.
+
+##### 고차 함수를 활용한 리액트 고차 컴포넌트 만들어보기
+```
+interface LoginProps {
+    loginRequired?: boolean
+}
+
+//withLoginComponent는 함수 컴포넌트를 인수로 받고 컴포넌트를 반환하는 고차 컴포넌트
+function withLoginComponent<T>(Component: ComponentType<T>) {
+    return function (props: T & LoginProps) {
+        const {loginRequired, ...restProps} = props
+        if(loginRequired) {
+            return <>로그인이 필요합니다.</>
+        }
+
+        return <Component {...(restProps as T)} />
+    }
+}
+
+//Component라는 함수 컴포넌트 자체를 withLoginComponent라 불리는 고차 컴포넌트로 감싸줬다.
+const Component = withLoginComponent((props: {value : string }) => {
+    return <h3>{props.value}</h3>
+})
+
+export default function App() {
+    //로그인 관련정보를 가져온다.
+    const isLogin = true
+    return <Component value = "text" loginRequired={isLogin} />
+}
+```
+이 컴포넌트는 loginRequired가 있다면(true이면) "로그인이 필요합니다"가 출력되고,
+loginRequired가 없거나 false이면 <h3>text</h3>가 출력된다.
+
+##### 고차컴포넌트 vs 사용자 정의 훅
+고차 컴포넌트는 컴포넌트 전체를 감쌀 수 있다는 점에서 사용자 정의 훅보다 영향력이 크다.
+사용자 정의 훅 : 단순히 값을 반환하거나 부수효과를 실행
+고차 컴포넌트 : 컴포넌트의 결과물에 영향을 미칠 수 있는 다른 공통된 작업을 처리할 수 있다.
+
+##### 고차컴포넌트 사용 시 주의할 점
+1. with로 시작하는 이름을 사용해야 한다. 
+2. 부수 효과를 최소화해야한다(props를 임의로 수정/추가/삭제하는 일은 없어야 한다).
+3. 여러 개의 고차 컴포넌트로 컴포넌트를 감쌀 경우 복잡성이 커진다.
+
+### 3.2.3 사용자 정의 훅과 고차 컴포넌트 중 무엇을 써야 할까?
+두 가지 모두 중복된 로직을 분리해 컴포넌트의 크기를 줄이고 가독성을 향상시키는 데 도움이 된다.
+
+#### 사용자 정의 훅이 필요한 경우
+useEffect, useState와 같이 리액트에서 제공하는 훅으로만 공통 로직을 분리할 수 있는 경우
+사용자 정의 훅 그자체로는 렌더링에 영향을 미치지 않기 때문에 개발자가 원하는 방향으로 훅을 사용할 수 있다.
+```
+function HookComponent() {
+    const {loggedIn} = useLogin()
+    useEffect(() => {
+        if(!loggedIn) {
+            // ..
+        }
+    }, [loggedIn])
+}
+```
+로그인 정보를 가지고 있는 훅인 useLogin은 단순히 loggedIn에 대한 값만 제공하고 컴포넌트를 사용하는 쪽에서 원하는 대로 사용 가능하다. 
+
+#### 고차 컴포넌트를 사용해야 하는 경우
+렌더링 결과물에도 영향을 미치는 공통 로직이라면 고차 컴포넌트를 사용하는 것이 좋다.
+
+(예시)
+1. 로그인되지 않은 어떤 사용자가 컴포넌트에 접근하려 할 때 애플리케이션 관점에서 컴포넌트를 감추고 로그인을 요구하는 공통 컴포넌트를 노출하려는 경우
+2. 특정 에러가 발생했을 때 현재 컴포넌트 대신 에러가 발생했음을 알릴 수 있는 컴포넌트를 노출하는 경우
+```
+function HookComponent() {
+    const {loggedIn} = useLogin()
+
+    if(!loggedIn) {
+        return <LoginComponent />
+    }
+
+    return <>안녕하세요.</>
+}
+
+const HOCComponent = withLoginComponent(() => {
+    return <>안녕하세요.</>
+})
+```
+
+### 3.2.4 정리
+사용자 정의 훅과 고차 컴포넌트 중 어떤 것을 사용할 지 고민될 때가 있을 것이다.
+공통화하고 싶은 작업이 무엇인지, 이를 처리해야 하는 상황을 살펴보고 적절한 방법을 찾는다면 애플리케이션을 더 효율적으로 개발할 수 있을 것이다.
