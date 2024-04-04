@@ -106,17 +106,19 @@ MemorizedComponent.displayName = '메모 컴포넌트입니다.'
 * 값이 함수인 porps를 누르면 Go to definition이 나타나고, 이를 클릭하면 해당 함수가 선언된 코드로 이동한다. 값을 더블클릭하면 내용을 수정 할 수 있다.
 
 ##### 컴포넌트 hooks
-* 컴포넌트에서 사용 중인 훅 정보를 확인할 수 있다.
+* 컴포넌트에서 사용 중인 훅 정보를 확인할 수 있다.  
+
     리액트 개발자 도구에서 볼 수 있는 훅 목록
-    State:useState
-    Reducer:useReducer
-    Context:useContext
-    Memo:useMemo
-    Callback:useCallback
-    Ref:useRef
-    id:useId
-    LayoutEffect:useLayoutEffect
-    Effect:useEffect
+    State:useState  
+    Reducer:useReducer  
+    Context:useContext  
+    Memo:useMemo  
+    Callback:useCallback  
+    Ref:useRef  
+    id:useId  
+    LayoutEffect:useLayoutEffect  
+    Effect:useEffect  
+
 * 리액트에서 정의되지 않은 명칭이 보인다면 이는 사용자 정의 훅이다.
 * hooks도 props 처럼 값을 더블클릭하면 해당 값을 수정할 수 있다.
 * 훅에 넘겨주는 함수를 기명 함수로 넘겨주면 실행되는 함수의 이름을 확인할 수 있다.
