@@ -149,6 +149,167 @@ describe('Math functions', () => {
 
 ### 8.2.3 리액트 컴포넌트 테스트 코드 작성하기
 
+자바스크립트에서 테스트를 배워봤으니 리액트에서 테스트를 배워봅시다.
+
+기본적으로 다음과 같은 순서로 진행됩니다.
+1. 컴포넌트를 렌더링한다.
+2. 필요하다면 컴포넌트에서 특정 액션을 수행한다.
+3. 컴포넌트 렌더링과 2번의 액션을 통해 기대하는 결과와 실제를 비교한다.
+
+create-react-app으로 프로젝트를 생성하면 기본적으로 테스팅 라이브러리가 포함되어 있습니다.
+![image](https://github.com/Deep-Dive-React/react-study-archive/assets/42230162/e3d709a6-50cc-4f0b-a24e-fb2d49c5efc4)
+
+위의 코드는 다음과 같이 요약할 수 있습니다.
+1. <App/>을 렌더링한다.
+2. 렌더링하는 컴포넌트 내부에서 'learn react'라는 문자열을 가진 DOM요소를 찾는다.
+3. expect(linkElement).toBeInTheDocument()라는 어센셜을 활용해 2번에서 찾은 요소가 document내부에 있는지 확인한다.
+
+그렇다면 다음의 컴포넌트 테스트에 대해 알아봅시다.
+
+#### 정적 컴포넌트
+정적 컴포넌트는 사용자 입력 또는 외부 상태 변화에 의존하지 않고, 단순히 정적인 내용을 렌더링하는 컴포넌트를 말합니다. 이러한 컴포넌트는 입력 없이 렌더링되고 예측 가능한 결과를 반환합니다.
+
+~~~
+// StaticComponent.js
+
+import React from 'react';
+
+const StaticComponent = () => {
+  return (
+    <div>
+      <h1>Hello, world!</h1>
+      <p>This is a static component.</p>
+    </div>
+  );
+}
+
+export default StaticComponent;
+
+~~~
+
+~~~
+// StaticComponent.test.js
+
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import StaticComponent from './StaticComponent';
+
+test('정적 컴포넌트 렌더링 테스트', () => {
+  render(<StaticComponent />);
+  
+  // 정적 컴포넌트의 텍스트가 화면에 렌더링되는지 확인
+  expect(screen.getByText('Hello, world!')).toBeInTheDocument();
+  expect(screen.getByText('This is a static component.')).toBeInTheDocument();
+});
+
+~~~
+이 테스트 코드에서는 render() 함수를 사용하여 정적 컴포넌트를 렌더링하고, screen.getByText() 함수를 사용하여 특정 텍스트가 화면에 렌더링되는지를 확인합니다.
+
+#### 동적 컴포넌트
+동적 컴포넌트는 사용자 입력 또는 외부 상태에 따라 동적으로 렌더링되는 컴포넌트를 말합니다. 이러한 컴포넌트는 상태 변화에 따라 렌더링 결과가 변할 수 있습니다.
+
+~~~
+// DynamicComponent.js
+
+import React, { useState } from 'react';
+
+const DynamicComponent = () => {
+  const [count, setCount] = useState(0);
+
+  const increment = () => {
+    setCount(count + 1);
+  };
+
+  return (
+    <div>
+      <h1>Counter: {count}</h1>
+      <button onClick={increment}>Increment</button>
+    </div>
+  );
+}
+
+export default DynamicComponent;
+
+~~~
+~~~
+// DynamicComponent.test.js
+
+import React from 'react';
+import { render, fireEvent, screen } from '@testing-library/react';
+import DynamicComponent from './DynamicComponent';
+
+test('동적 컴포넌트 렌더링 및 이벤트 테스트', () => {
+  render(<DynamicComponent />);
+  
+  // 초기 카운터 값 확인
+  expect(screen.getByText('Counter: 0')).toBeInTheDocument();
+
+  // 버튼 클릭 후 카운터 값 변경 확인
+  fireEvent.click(screen.getByText('Increment'));
+  expect(screen.getByText('Counter: 1')).toBeInTheDocument();
+});
+
+~~~
+이 테스트 코드에서는 동적 컴포넌트를 렌더링하고, 버튼 클릭 이벤트를 발생시켜 카운터 값이 제대로 변경되는지를 확인합니다.
+
+
+#### 비동기 이벤트가 발생하는 컴포넌트
+
+~~~
+// AsyncComponent.js
+
+import React, { useState } from 'react';
+
+const AsyncComponent = () => {
+  const [data, setData] = useState('');
+
+  const fetchData = async () => {
+    const response = await fetch('https://api.example.com/data');
+    const result = await response.json();
+    setData(result.data);
+  };
+
+  return (
+    <div>
+      <button onClick={fetchData}>Fetch Data</button>
+      <p>{data}</p>
+    </div>
+  );
+}
+
+export default AsyncComponent;
+
+~~~
+~~~
+// AsyncComponent.test.js
+
+import React from 'react';
+import { render, fireEvent, screen, waitFor } from '@testing-library/react';
+import AsyncComponent from './AsyncComponent';
+
+// Mock fetch 함수
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    json: () => Promise.resolve({ data: 'Mocked data' }),
+  })
+);
+
+test('비동기 이벤트 발생 및 데이터 로딩 테스트', async () => {
+  render(<AsyncComponent />);
+  
+  // 데이터가 로딩되기 전에는 'Mocked data' 텍스트가 없는지 확인
+  expect(screen.queryByText('Mocked data')).toBeNull();
+
+  // 버튼 클릭 후 데이터 로딩되는지 확인
+  fireEvent.click(screen.getByText('Fetch Data'));
+
+  // 데이터가 로딩될 때까지 기다림
+  await waitFor(() => expect(screen.getByText('Mocked data')).toBeInTheDocument());
+});
+
+~~~
+이 테스트 코드에서는 비동기 이벤트가 발생하는 컴포넌트를 렌더링하고, 버튼 클릭 이벤트를 발생시켜 데이터가 비동기적으로 로드되는지를 확인합니다. waitFor() 함수를 사용하여 데이터가 로딩될 때까지 대기합니다.
+
 
 ### 8.2.4 사용자 정의 훅 테스트하기
 
