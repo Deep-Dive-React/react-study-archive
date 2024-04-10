@@ -67,6 +67,85 @@ jsdom 패키지를 사용하여 빈 HTML 페이지를 생성하고, 이 페이�
 
 ### 8.2.2 자바스크립트 테스트의 기초
 
+간단한 테스트 예제를 살펴 봅시다.
+~~~
+function sum(a,b){
+  return a+b
+}
+~~~
+
+이런 함수가 있을때
+~~~
+let actual = sum(1,2)
+let expected = 3
+if (expected !== actual){
+  throw new Error('에러')
+}
+~~~
+이런식으로 함수의 return값과 실제 예상값을 비교하여 둘의 차이를 비교합니다.
+
+테스트는 대부분 다음과 같은 과정을 거치게 됩니다.
+1. 테스트할 함수나 모듈을 선정한다.
+2. 함수나 모듈이 반환하기 기대하는 값을 적는다.
+3. 함수나 모듈의 실제 반환값을 적는다.
+4. 3번의 기대에 따라 2번의 기대가 일치하는지 확인한다.
+5. 기대하는 결과를 반환한다면 테스트는 성공, 아니면 에러를 던진다.
+
+보통 테스트 코드를 작성할 때는 기본 파일(테스트 할 프로그램)이 있고 다른 파일에서 import 불러와서 작성합니다.
+
+이를 위해 node.js에서 assert 라이브러리를 제공한다고 합니다.
+
+> 테스팅 프레임워크
+
+유명한 javascript 테스팅 프레임워크에는 Jest, Mocha, Karma, Jasmine등이 있습니다.
+
+Jest 코드 예제
+~~~
+// math.js
+
+// 덧셈 함수
+function sum(a, b) {
+  return a + b;
+}
+
+// 뺄셈 함수
+function subtract(a, b) {
+  return a - b;
+}
+
+// 함수를 모듈로 내보냅니다.
+module.exports = {
+  sum,
+  subtract
+};
+~~~
+
+~~~
+// test.js
+
+// 테스트할 함수 또는 모듈을 불러옵니다.
+const { sum, subtract } = require('./math');
+
+// describe() 블록은 테스트 스위트를 정의합니다.
+describe('Math functions', () => {
+  // 각각의 it() 블록은 특정 테스트 케이스를 정의합니다.
+  it('should add two numbers correctly', () => {
+    // expect() 함수를 사용하여 예상되는 결과를 확인합니다.
+    expect(sum(1, 2)).toBe(3);
+    expect(sum(-1, 1)).toBe(0);
+    expect(sum(0, 0)).toBe(0);
+  });
+
+  it('should subtract two numbers correctly', () => {
+    expect(subtract(3, 1)).toBe(2);
+    expect(subtract(-1, 1)).toBe(-2);
+    expect(subtract(0, 0)).toBe(0);
+  });
+});
+
+~~~
+
+이런 식으로 간단하게 코드를 작성하는 것만으로도 테스트케이스 실패 갯수, 정보등이 터미널에 출력됩니다.
 
 ### 8.2.3 리액트 컴포넌트 테스트 코드 작성하기
 
