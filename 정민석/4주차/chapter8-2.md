@@ -313,8 +313,76 @@ test('비동기 이벤트 발생 및 데이터 로딩 테스트', async () => {
 
 ### 8.2.4 사용자 정의 훅 테스트하기
 
+다른 컴포넌트들을 테스팅 해봤던 것처럼 사용자 정의 훅도 테스트를 할 수 있습니다.
+
+react-hooks-testing-library를 활용하면 되는데요
+
+useEffectDebugger라는 훅을 테스트해보겠습니다.
+
+간단하게 기능을 추려서 예제를 작성해봤습니다.
+~~~
+// useEffectDebugger.js
+
+import { useEffect } from 'react';
+
+const useEffectDebugger = (effect, dependencies, dependencyName = '') => {
+  useEffect(() => {
+    console.log(`Effect ${dependencyName} triggered`);
+    return effect();
+  }, dependencies);
+};
+
+export default useEffectDebugger;
+
+~~~
+
+위의 코드는 useEffectDebugger라는 사용자 정의 훅을 정의합니다. 이 훅은 useEffect 훅을 디버깅하는데 사용됩니다. 각각의 의존성이 트리거될 때마다 콘솔에 해당 의존성이 트리거되었음을 표시합니다.
+
+~~~
+// useEffectDebugger.test.js
+
+import { renderHook } from 'react-hooks-testing-library';
+import useEffectDebugger from './useEffectDebugger';
+
+test('useEffectDebugger 훅 테스트', () => {
+  // 테스트할 useEffect 훅의 콜백 함수
+  const effect = jest.fn();
+
+  // 의존성 배열
+  const dependencies = [1, true, 'dependency'];
+
+  // useEffectDebugger 훅을 렌더링
+  renderHook(() => useEffectDebugger(effect, dependencies, 'Test Dependency'));
+
+  // 의존성이 변경될 때마다 effect 함수가 호출되는지 확인
+  expect(effect).toHaveBeenCalledTimes(1); // 최초 렌더링 시 호출
+  dependencies.forEach((dependency, index) => {
+    expect(effect).toHaveBeenNthCalledWith(index + 1); // 콜백이 인덱스마다 호출됨
+  });
+});
+
+~~~
+위의 코드에서는 renderHook 함수를 사용하여 useEffectDebugger 훅을 렌더링하고, 전달된 의존성 배열이 변경될 때마다 효과 함수가 호출되는지 확인합니다. 
+
+효과 함수가 정확히 예상대로 호출되는지 확인하기 위해 jest.fn()을 사용하여 효과 함수를 목(mock)으로 만들었습니다.
+
+이 테스트 코드를 실행하면 useEffectDebugger 훅이 의존성이 변경될 때마다 효과 함수를 호출하는지 여부를 확인할 수 있습니다.
+
+react-hooks-testing-library를 활용하면 굳이 테스트를 위한 컴포넌트를 만들지 않아도 간편하게 훅을 테스트 할 수 있으니 자주 사용해보면 좋을 것 같습니다.
+
 
 ### 8.2.5 테스트를 작성하기에 앞서 고려해야 할 점
 
+테스트를 하는 이론적인 방법중 테스트 커버리지, TDD등이 있는데요
+
+프론트엔드에서 테스트를 해야하는 범위가 너무 많다고 교재에서 말합니다.
+
+실제로 출시된 앱도 끊임없이 버그가 발생하고 이상한 유저에 대해 속수무책인 경우도 있습니다.
+
+따라서 무작정 테스트 코드를 작성하기 보다는 프로그램의 취약한 부분에 대해 먼저 고민해보고 개발하기를 권장합니다.
 
 ### 8.2.6 그 밖에 해볼 만한 여러가지 테스트
+
+- 유닛테스트 : 각각의 코드나 컴포넌트가 독립적으로 분리된 환경에서 의도된 대로 정확히 작동하는지 검증하는 테스트
+- 통합 테스트 : 유닛 테스트를 통과한 여러 컴포넌트가 묶여서 하나의 기능으로 정상적으로 작동하는지 확인하는 테스트 
+- 엔드 투 엔드 테스트 : 흔히 E2E 테스트라 하며 실제 사용자처럼 작동하는 로봇을 활용해 앱의 전체적인 기능을 확인하는 테스트
