@@ -163,7 +163,7 @@ create-react-app으로 프로젝트를 생성하면 기본적으로 테스팅 �
 ![image](https://github.com/Deep-Dive-React/react-study-archive/assets/42230162/e3d709a6-50cc-4f0b-a24e-fb2d49c5efc4)
 
 위의 코드는 다음과 같이 요약할 수 있습니다.
-1. <App/>을 렌더링한다.
+1. App을 렌더링한다.
 2. 렌더링하는 컴포넌트 내부에서 'learn react'라는 문자열을 가진 DOM요소를 찾는다.
 3. expect(linkElement).toBeInTheDocument()라는 어센셜을 활용해 2번에서 찾은 요소가 document내부에 있는지 확인한다.
 
