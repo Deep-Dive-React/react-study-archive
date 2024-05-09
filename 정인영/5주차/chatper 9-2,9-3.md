@@ -56,17 +56,17 @@ CI = Continuous Integration.
 
 Actions 들어가서 template 선택하면 됩니다.
 
-![alt text](<../스크린샷 2024-05-09 오후 12.42.49.png>)
+![alt text](<./스크린샷 2024-05-09 오후 12.42.49.png>)
 
 
-내가 
+
 
 
 
 ### VERCEL + Github Action 을 통하여 CI / CD 환경을 구축
 
-
-`env`에는 vercel에서 내가 생성한 프로젝트에 접근할 수 있게,`Github-settings-secret keys and variables`에 설정해준 변수명을 secrets.{변수명} 형식으로 불러왔다.
+workflows 파일을 보면, 
+`env` 항목에는 vercel에서 내가 생성한 프로젝트에 접근할 수 있게,`Github-settings-secret keys and variables`에 설정해준 변수명을 secrets.{변수명} 형식으로 불러왔다.
 
 여기서 사용한 `VERCEL_ORG_ID` 와 `VERCEL_PROJECT_ID` 를 얻는 방법은,
 
@@ -90,7 +90,11 @@ vercel (VERCEL CLI 설치)
 
 ### 성능 최적화
 
-책에 나와 있는 대로 `Lightbouse Action` 을 트리거하면 개발된 서비스의 성능 지표를 PR날릴 때마다 지속적으로 노출할 수 있다. 자세한 설정은 Lightgouse CI 공식 문서에서 확인 가능하다. 
+책에 나와 있는 대로 `Lighthouse Action` 을 트리거하면 개발된 서비스의 성능 지표를 PR날릴 때마다 지속적으로 노출할 수 있다. 자세한 설정은 Lightgouse CI 공식 문서에서 확인 가능하다. 
+
+![alt text](image-2.png)
+![alt text](image-3.png)
+![alt text](image-1.png)
 
 
 ### Dependecies 취약점 해결 

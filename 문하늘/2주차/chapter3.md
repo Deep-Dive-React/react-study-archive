@@ -226,7 +226,7 @@ export default function App() {
     return <Component value = "text" loginRequired={isLogin} />
 }
 ```
-이 컴포넌트는 loginRequired가 있다면(true이면) "로그인이 필요합니다"가 출력되고,
+이 컴포넌트는 loginRequired가 있거나 true이면 "로그인이 필요합니다"가 출력되고,
 loginRequired가 없거나 false이면 <h3>text</h3>가 출력된다.
 
 ##### 고차컴포넌트 vs 사용자 정의 훅
