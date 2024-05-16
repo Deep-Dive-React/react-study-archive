@@ -13,9 +13,12 @@
 ## 2-2. 서버 컴포넌트란?
 
 <aside>
-➕ 요즘 IT, 새로 등장한 ‘서버 컴포넌트’ 이해하기: `https://yozm.wishket.com/magazine/detail/2271/`
-카카오페이, 
+➕ 요즘 IT, 새로 등장한 ‘서버 컴포넌트’ 이해하기: 
 
+[서버 컴포넌트](https://yozm.wishket.com/magazine/detail/2271/)
+
+
+카카오페이: 
 `React 18`: 리액트 서버 컴포넌트 준비하기: https://tech.kakaopay.com/post/react-server-components/
 
 </aside>
