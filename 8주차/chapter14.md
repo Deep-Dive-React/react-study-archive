@@ -137,8 +137,8 @@ __출처(origin)__
 
 이 세 조합을 출처라고 한다. 그리고 두 주소를 비교할 때 same-origin인지, cross-origin인지는 다음과 같이 구분할 수 있다.  
 <img src="./img/5.jpg" width="50%" height="50%"></img>  
-이러한 출처에 대한 정보를 바탕으로 Referrer-Policy의 각 값별로 다음과 같이 작동한다.
-<img src="./img/6.jpg" width="50%" height="50%"</img>
+이러한 출처에 대한 정보를 바탕으로 Referrer-Policy의 각 값별로 다음과 같이 작동한다.  
+<img src="./img/6.jpg" width="50%" height="50%"></img>  
 Referrer-Policy는 응답 헤더뿐만 아니라 페이지의 ```<meta/>``` 태그로도 다음과 같이 설정할 수 있다.
 ```html
 <meta name="referrer" content="origin />
